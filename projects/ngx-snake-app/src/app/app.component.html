@@ -1,0 +1,41 @@
+<ngx-snake #game></ngx-snake>
+
+
+<table class="controls">
+    <tr>
+        <td><button (click)="game.actionStart()">Start</button></td>
+<!--        <td><button (click)="game.actionStop()">Stop</button></td>-->
+<!--        <td><button (click)="game.actionReset()">Reset</button></td>-->
+        <td></td>
+    </tr>
+    <tr><td></td></tr>
+    <tr><td></td></tr>
+    <tr><td></td></tr>
+    <tr>
+        <td></td>
+        <td><button (click)="game.actionUp()">Up</button></td>
+    </tr>
+    <tr>
+        <td><button (click)="game.actionLeft()">Left</button></td>
+        <td></td>
+        <td><button (click)="game.actionRight()">Right</button></td>
+
+    </tr>
+    <tr>
+        <td></td>
+        <td><button (click)="game.actionDown()">Down</button></td>
+    </tr>
+    <tr style="height: 20px">
+        <td></td>
+    </tr>
+<!--    <tr>-->
+<!--        <td colspan="3">-->
+<!--            <button *ngIf="!bw" class="bw" (click)="bw = true">Go B/W !</button>-->
+<!--            <button *ngIf="bw" class="colors" (click)="bw = false">-->
+<!--                <span class="green">no, </span>-->
+<!--                <span>back to</span>-->
+<!--                <span class="red">colors</span>-->
+<!--            </button>-->
+<!--        </td>-->
+<!--    </tr>-->
+</table>

@@ -1,0 +1,4 @@
+<div class="ngx-snake-board-row" *ngFor="let row of data">
+    <ngx-snake-tile *ngFor="let tileState of row"
+                    [state]="tileState"></ngx-snake-tile>
+</div>
