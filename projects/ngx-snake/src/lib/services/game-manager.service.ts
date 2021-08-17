@@ -19,10 +19,11 @@ export class GameManagerService {
     }
 
     private _snake: Array<SnakePart> = [];
-    private _moveDirection: MoveDirections = MoveDirections.RIGHT;
+    private _moveDir: MoveDirections = MoveDirections.RIGHT;
 
     private _interval$ = new BehaviorSubject(300);
     private _paused = true;
+    private _playable = true;
     public signal$ = this._interval$
         .asObservable()
         .pipe(
@@ -46,7 +47,9 @@ export class GameManagerService {
     }
 
     public start() {
-        this._paused = false;
+        if (this._playable) {
+            this._paused = false;
+        }
     }
 
     public changeSpeed(period: number): void {
@@ -59,6 +62,8 @@ export class GameManagerService {
 
     public reset() {
         this.pause();
+        this._playable = true;
+        this._moveDir = MoveDirections.RIGHT;
 
         this._buildEmptyGrid();
         this._initSnake();
@@ -67,10 +72,17 @@ export class GameManagerService {
         this._gridChanged();
     }
 
-    public up() { this._moveDirection = MoveDirections.UP; }
-    public right() { this._moveDirection = MoveDirections.RIGHT; }
-    public down() { this._moveDirection = MoveDirections.DOWN; }
-    public left() { this._moveDirection = MoveDirections.LEFT; }
+    public up() {       this._moveDir !== MoveDirections.DOWN   ? this._moveDir = MoveDirections.UP : this._moveDir }
+    public right() {    this._moveDir !== MoveDirections.LEFT   ? this._moveDir = MoveDirections.RIGHT : this._moveDir }
+    public down() {     this._moveDir !== MoveDirections.UP     ? this._moveDir = MoveDirections.DOWN : this._moveDir }
+    public left() {     this._moveDir !== MoveDirections.RIGHT  ? this._moveDir = MoveDirections.LEFT : this._moveDir }
+
+    private _endGame() {
+        this._playable = false;
+        this.pause();
+
+        alert('game over');
+    }
 
     private _buildEmptyGrid() {
         const newGrid = [];
@@ -109,24 +121,66 @@ export class GameManagerService {
 
     private _gameCycle() {
         const head = this._snake[0];
-        if (this._moveDirection === MoveDirections.UP) {
-            this._snake.unshift({ x: head.x, y: head.y - 1 });
+        let newHead: SnakePart;
+        if (this._moveDir === MoveDirections.UP) {
+            newHead = { x: head.x, y: head.y - 1 };
 
-        } else if (this._moveDirection === MoveDirections.RIGHT) {
-            this._snake.unshift({ x: head.x + 1, y: head.y });
+        } else if (this._moveDir === MoveDirections.RIGHT) {
+            newHead = { x: head.x + 1, y: head.y };
 
-        } else if (this._moveDirection === MoveDirections.DOWN) {
-            this._snake.unshift({ x: head.x, y: head.y + 1 });
+        } else if (this._moveDir === MoveDirections.DOWN) {
+            newHead = { x: head.x, y: head.y + 1 };
 
-        } else if (this._moveDirection === MoveDirections.LEFT) {
-            this._snake.unshift({ x: head.x - 1, y: head.y });
+        } else {
+            // Moving left
+            newHead = { x: head.x - 1, y: head.y };
         }
 
-        // drop old tail
-        this._snake.pop();
+        if (this._willCrash(newHead)) {
+            return this._endGame();
+        }
+
+        // position new head
+        this._snake.unshift(newHead);
+
+        if (this._willGrow() === false) {
+            // drop old tail
+            this._snake.pop();
+        }
 
         this._buildEmptyGrid();
         this._drawSnake();
         this._gridChanged();
+    }
+
+    /**
+     * Checks if field is not currently occupied (is free to take)
+     * @param newHead
+     * @private
+     */
+    private _willCrash(newHead: SnakePart): boolean {
+        // Gets out of the board
+        if (newHead.x < 0 || newHead.y < 0 || newHead.x > this._gridSize.w || newHead.y > this._gridSize.h) {
+            return true;
+        }
+
+        const CRASHABLE_FIELDS: Array<TileState> = [
+            TileState.Body,
+            TileState.Wall
+        ];
+        if (CRASHABLE_FIELDS.includes(this._grid[newHead.y][newHead.x])) {
+            return true;
+        }
+
+        // If crashing with tail then check if tail will move...
+        if (this._grid[newHead.y][newHead.x] === TileState.Tail && this._willGrow()) {
+            return true;
+        }
+
+        return false;
+    }
+
+    private _willGrow(): boolean {
+        return false;
     }
 }
