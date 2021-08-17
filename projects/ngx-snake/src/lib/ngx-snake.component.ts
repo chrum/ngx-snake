@@ -34,8 +34,12 @@ export class NgxSnakeComponent implements OnInit {
         this._manager.start();
     }
 
-    public actionPause() {
+    public actionStop() {
+        this._manager.pause();
+    }
 
+    public actionReset() {
+        this._manager.reset();
     }
 
 }

@@ -34,7 +34,8 @@ export class GameManagerService {
     initialize(height: number, width: number) {
         this._gridSize.w = width;
         this._gridSize.h = height;
-        this._grid = this._buildEmptyGrid();
+
+        this._buildEmptyGrid();
         this._initSnake();
         this._drawSnake();
 
@@ -56,6 +57,16 @@ export class GameManagerService {
         this._paused = true;
     }
 
+    public reset() {
+        this.pause();
+
+        this._buildEmptyGrid();
+        this._initSnake();
+        this._drawSnake();
+
+        this._gridChanged();
+    }
+
     public up() { this._moveDirection = MoveDirections.UP; }
     public right() { this._moveDirection = MoveDirections.RIGHT; }
     public down() { this._moveDirection = MoveDirections.DOWN; }
@@ -72,7 +83,7 @@ export class GameManagerService {
             newGrid.push(row);
         }
 
-        return newGrid;
+        this._grid =  newGrid;
     }
 
     private _gridChanged() {
@@ -80,6 +91,8 @@ export class GameManagerService {
     }
 
     private _initSnake() {
+        this._snake = [];
+
         const xCenter = Math.floor(this._gridSize.w / 2);
         const yCenter = Math.floor(this._gridSize.h / 2);
 
@@ -88,13 +101,9 @@ export class GameManagerService {
         this._snake.push({ x: xCenter - 2, y: yCenter });
     }
 
-    private _drawSnake(oldTail?: SnakePart) {
+    private _drawSnake() {
         for(const part of this._snake) {
             this._grid[part.y][part.x] = TileState.Body;
-        }
-
-        if (oldTail) {
-            this._grid[oldTail.y][oldTail.x] = TileState.Free;
         }
     }
 
@@ -113,7 +122,11 @@ export class GameManagerService {
             this._snake.unshift({ x: head.x - 1, y: head.y });
         }
 
-        this._drawSnake(this._snake.pop());
+        // drop old tail
+        this._snake.pop();
+
+        this._buildEmptyGrid();
+        this._drawSnake();
         this._gridChanged();
     }
 }
