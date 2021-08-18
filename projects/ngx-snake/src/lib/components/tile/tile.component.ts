@@ -11,7 +11,7 @@ import {TileState} from '../../definitions';
 
 @Component({
     selector: 'ngx-snake-tile',
-    template: ``,
+    template: `<div></div>`,
     styleUrls: ['./tile.component.scss'],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,

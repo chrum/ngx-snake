@@ -1,28 +1,49 @@
 ngx-snake-tile {
     display: block;
-    background: rgba(176, 230, 225, 0.35);
+    background: #ccf1ed;
+    border: 1px solid #4e4645;
     width: 25px;
     height: 25px;
     float: left;
-    border: 1px solid #4e4645;
     margin: 1px;
 
+    div {
+        height: 100%;
+        width: 100%;
+        display: block;
+        background: #ccf1ed;
+    }
+
     &.free {
-        background: #B0E6E159;
+        div {
+            background: #ccf1ed;
+        }
     }
     &.head {
-        background: #FF77A8;
+        //padding: 2px;
+        div {
+            background: #4e6c31;
+        }
     }
     &.body {
-        background: #83769C;
+        div {
+            background: #4e6c31;
+        }
     }
     &.tail {
-        background: #29ADFF;
+        //padding: 3px;
+        div {
+            background: #4e6c31;
+        }
     }
     &.wall {
-        background: #C2C3C7;
+        div {
+            background: #C2C3C7;
+        }
     }
     &.food {
-        background: #00E436;
+        div {
+            background: #00E436;
+        }
     }
 }

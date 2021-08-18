@@ -3,7 +3,7 @@ import {BehaviorSubject, interval, ReplaySubject} from 'rxjs';
 import {GameGrid, MoveDirections, TileState} from '../definitions';
 import {filter, switchMap, tap} from 'rxjs/operators';
 
-interface SnakePart {
+interface Part {
     x: number, y: number
 }
 
@@ -18,8 +18,10 @@ export class GameManagerService {
         w: 10
     }
 
-    private _snake: Array<SnakePart> = [];
+    private _snake: Array<Part> = [];
     private _moveDir: MoveDirections = MoveDirections.RIGHT;
+
+    private _food: Part | null = null;
 
     private _interval$ = new BehaviorSubject(300);
     private _paused = true;
@@ -113,15 +115,44 @@ export class GameManagerService {
         this._snake.push({ x: xCenter - 2, y: yCenter });
     }
 
+    private _spawnFood() {
+        if (!this._food) {
+            const eligibleFields = [];
+            for(let y = 1; y <= this._gridSize.h - 1; y++) {
+                for(let x = 1; x <= this._gridSize.w - 1 ; x++) {
+                    if (this._grid[y][x] === TileState.Free) {
+                        eligibleFields.push({
+                            x, y
+                        })
+                    }
+                }
+            }
+
+            const shuffled = eligibleFields.sort((a, b) => 0.5 - Math.random());
+            this._food = shuffled[0];
+
+        }
+
+        this._grid[this._food.y][this._food.x] = TileState.Food;
+    }
+
     private _drawSnake() {
-        for(const part of this._snake) {
+        const head = this._snake[0];
+        const tail = this._snake[this._snake.length - 1];
+
+        this._grid[head.y][head.x] = TileState.Head;
+
+        for(let i = 1; i < this._snake.length - 1; i++) {
+            const part = this._snake[i];
             this._grid[part.y][part.x] = TileState.Body;
         }
+
+        this._grid[tail.y][tail.x] = TileState.Tail;
     }
 
     private _gameCycle() {
         const head = this._snake[0];
-        let newHead: SnakePart;
+        let newHead: Part;
         if (this._moveDir === MoveDirections.UP) {
             newHead = { x: head.x, y: head.y - 1 };
 
@@ -143,13 +174,17 @@ export class GameManagerService {
         // position new head
         this._snake.unshift(newHead);
 
-        if (this._willGrow() === false) {
+        if (this._willGrow(newHead)) {
+            this._food = null;
+
+        } else {
             // drop old tail
             this._snake.pop();
         }
 
         this._buildEmptyGrid();
         this._drawSnake();
+        this._spawnFood();
         this._gridChanged();
     }
 
@@ -158,7 +193,7 @@ export class GameManagerService {
      * @param newHead
      * @private
      */
-    private _willCrash(newHead: SnakePart): boolean {
+    private _willCrash(newHead: Part): boolean {
         // Gets out of the board
         if (newHead.x < 0 || newHead.y < 0 || newHead.x > this._gridSize.w || newHead.y > this._gridSize.h) {
             return true;
@@ -173,14 +208,17 @@ export class GameManagerService {
         }
 
         // If crashing with tail then check if tail will move...
-        if (this._grid[newHead.y][newHead.x] === TileState.Tail && this._willGrow()) {
+        if (this._grid[newHead.y][newHead.x] === TileState.Tail && this._willGrow(newHead)) {
             return true;
         }
 
         return false;
     }
 
-    private _willGrow(): boolean {
+    private _willGrow(newHead: Part): boolean {
+        if (this._food && this._food.y === newHead.y && this._food.x === newHead.x) {
+            return true;
+        }
         return false;
     }
 }
