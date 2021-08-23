@@ -104,15 +104,17 @@ OR
 To change colors and tiles (to **black and white** for example) define styles with colors like
 ```scss
 ngx-snake {
-    tile {
-        background: white;
-        &.color-box {
-          background: #000000;
+    ngx-snake-tile {
+        background: #ffffff;
+        &.free {
+            div {
+                background: #ffffff;
+            }
         }
     }
 }
 ```
-for full example (and all class names) [go here](https://github.com/chrum/ngx-tetris/blob/master/src/styles.scss)
+for full example (and all class names) [go here](https://github.com/chrum/ngx-snake/blob/master/projects/ngx-snake-app/src/styles.scss)
 
 ## Development
 
