@@ -1,27 +1,128 @@
-# NgxSnake
+# ngx-snake
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 12.1.4.
+Snake game as an angular component
 
-## Development server
+***ngx-snake*** is actually only the ***core of the game***... YOU need to add everything around it (controls, score...)  yourself :)
+
+
+Check the demo [here](http://chrum.it/pages/ngx-snake)
+
+## Using it:
+#### Install:
+NOT YET :( the library is not yet published to npm
+<!--
+```bash
+npm install ngx-snake
+```
+-->
+
+#### Import
+```javascript
+import {BrowserModule} from '@angular/platform-browser';
+import {NgModule} from '@angular/core';
+
+import {AppComponent} from './app.component';
+import {NgxSnakeModule} from 'ngx-snake';
+
+@NgModule({
+    declarations: [
+        AppComponent,
+    ],
+    imports: [
+        BrowserModule,
+        NgxSnakeModule
+    ],
+    providers: [],
+    bootstrap: [AppComponent]
+})
+export class AppModule {
+}
+```
+
+#### Add/Connect to your fancy control interface
+```html
+    <ngx-snake #game></ngx-snake>
+
+        <button (click)="game.actionStart()">Start</button>
+        <button (click)="game.actionStop()">Stop</button>
+        <button (click)="game.actionReset()">Reset</button>
+        <button (click)="game.actionUp()">Up</button>
+        <button (click)="game.actionLeft()">Left</button>
+        <button (click)="game.actionRight()">Right</button>
+        <button (click)="game.actionDown()">Down</button>
+```
+
+#### Inputs
+
+Name  | Default | Type | Description
+--- | --- | --- | ---
+boardHeight | 10 | number | Board height
+boardWidth | 10 | number | Board width
+
+
+
+#### Outputs
+
+Name  | Description
+--- | ---
+foodEaten | Called whenever our sweet snake gained some weight ;)
+gameOver | :( collision! snake didn't make it (remember about reset button)
+
+#### Public methods
+- `actionStart`
+- `actionStop`
+- `actionReset`
+- `actionUp`
+- `actionRight`
+- `actionDown`
+- `actionLeft`
+
+which can be used like:
+```html
+<button (click)="onRotateButtonPressed()">Rotate</button>
+```
+```typescript
+...
+export class SnakeContainingComponent {
+    @ViewChild(NgxSnakeComponent)
+    private _snake: NgxSnakeComponent;
+
+    public onRotateButtonPressed() {
+        this._snake.actionRotate();
+    }
+}
+```
+OR
+```html
+<ngx-snake #game></ngx-snake>
+
+<button (click)="game.actionRotate()">Rotate</button>
+```
+
+### Styling
+
+To change colors and tiles (to **black and white** for example) define styles with colors like
+```scss
+ngx-snake {
+    tile {
+        background: white;
+        &.color-box {
+          background: #000000;
+        }
+    }
+}
+```
+for full example (and all class names) [go here](https://github.com/chrum/ngx-tetris/blob/master/src/styles.scss)
+
+## Development
+
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 
-## Code scaffolding
+## Authors
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+[Chrystian Ruminowicz](http://chrum.it)
 
-## Build
+## Licence
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
-
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+This project is licensed under the MIT license. See the [LICENSE](LICENSE) file for more info.

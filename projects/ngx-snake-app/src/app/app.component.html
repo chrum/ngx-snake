@@ -1,4 +1,6 @@
-<ngx-snake #game></ngx-snake>
+<ngx-snake #game  [class.black-and-white]="bw"
+    (foodEaten)="onGrow()"
+    (gameOver)="onGameOver()"></ngx-snake>
 
 
 <table class="controls">
@@ -28,14 +30,14 @@
     <tr style="height: 20px">
         <td></td>
     </tr>
-<!--    <tr>-->
-<!--        <td colspan="3">-->
-<!--            <button *ngIf="!bw" class="bw" (click)="bw = true">Go B/W !</button>-->
-<!--            <button *ngIf="bw" class="colors" (click)="bw = false">-->
-<!--                <span class="green">no, </span>-->
-<!--                <span>back to</span>-->
-<!--                <span class="red">colors</span>-->
-<!--            </button>-->
-<!--        </td>-->
-<!--    </tr>-->
+    <tr>
+        <td colspan="3">
+            <button *ngIf="!bw" class="bw" (click)="bw = true">Go B/W !</button>
+            <button *ngIf="bw" class="colors" (click)="bw = false">
+                <span class="green">no, </span>
+                <span>back to</span>
+                <span class="red">colors</span>
+            </button>
+        </td>
+    </tr>
 </table>

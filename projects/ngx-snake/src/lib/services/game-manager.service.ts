@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
-import {BehaviorSubject, interval, ReplaySubject} from 'rxjs';
+import {BehaviorSubject, interval, ReplaySubject, Subject} from 'rxjs';
 import {GameGrid, MoveDirections, TileState} from '../definitions';
-import {filter, switchMap, tap} from 'rxjs/operators';
+import {filter, switchMap, take, tap} from 'rxjs/operators';
 
 interface Part {
     x: number, y: number
@@ -13,17 +13,25 @@ export class GameManagerService {
     private _grid$ = new ReplaySubject<GameGrid>(1);
     public grid$ = this._grid$.asObservable();
 
+    private _gameOver$ = new Subject();
+    public gameOver$ = this._gameOver$;
+
+    private _foodEaten$ = new Subject();
+    public foodEaten$ = this._foodEaten$;
+
+
     private _gridSize = {
         h: 10,
         w: 10
     }
 
     private _snake: Array<Part> = [];
+    private _nextMoveDir: MoveDirections = MoveDirections.RIGHT;
     private _moveDir: MoveDirections = MoveDirections.RIGHT;
 
     private _food: Part | null = null;
 
-    private _interval$ = new BehaviorSubject(300);
+    private _interval$ = new BehaviorSubject(700);
     private _paused = true;
     private _playable = true;
     public signal$ = this._interval$
@@ -66,6 +74,7 @@ export class GameManagerService {
         this.pause();
         this._playable = true;
         this._moveDir = MoveDirections.RIGHT;
+        this._nextMoveDir = this._moveDir;
 
         this._buildEmptyGrid();
         this._initSnake();
@@ -74,16 +83,16 @@ export class GameManagerService {
         this._gridChanged();
     }
 
-    public up() {       this._moveDir !== MoveDirections.DOWN   ? this._moveDir = MoveDirections.UP : this._moveDir }
-    public right() {    this._moveDir !== MoveDirections.LEFT   ? this._moveDir = MoveDirections.RIGHT : this._moveDir }
-    public down() {     this._moveDir !== MoveDirections.UP     ? this._moveDir = MoveDirections.DOWN : this._moveDir }
-    public left() {     this._moveDir !== MoveDirections.RIGHT  ? this._moveDir = MoveDirections.LEFT : this._moveDir }
+    public up() {       this._moveDir !== MoveDirections.DOWN   ? this._nextMoveDir = MoveDirections.UP : this._moveDir }
+    public right() {    this._moveDir !== MoveDirections.LEFT   ? this._nextMoveDir = MoveDirections.RIGHT : this._moveDir }
+    public down() {     this._moveDir !== MoveDirections.UP     ? this._nextMoveDir = MoveDirections.DOWN : this._moveDir }
+    public left() {     this._moveDir !== MoveDirections.RIGHT  ? this._nextMoveDir = MoveDirections.LEFT : this._moveDir }
 
     private _endGame() {
         this._playable = false;
         this.pause();
 
-        alert('game over');
+        this._gameOver$.next();
     }
 
     private _buildEmptyGrid() {
@@ -153,6 +162,7 @@ export class GameManagerService {
     private _gameCycle() {
         const head = this._snake[0];
         let newHead: Part;
+        this._moveDir = this._nextMoveDir;
         if (this._moveDir === MoveDirections.UP) {
             newHead = { x: head.x, y: head.y - 1 };
 
@@ -175,6 +185,8 @@ export class GameManagerService {
         this._snake.unshift(newHead);
 
         if (this._willGrow(newHead)) {
+            this._increaseSpeed();
+            this._foodEaten$.next();
             this._food = null;
 
         } else {
@@ -220,5 +232,24 @@ export class GameManagerService {
             return true;
         }
         return false;
+    }
+
+    private _increaseSpeed() {
+        this._interval$
+            .pipe(take(1))
+            .subscribe((current) => {
+                if (current >= 600) {
+                    this._interval$.next(current - 100);
+
+                } else if (current >= 500) {
+                    this._interval$.next(current - 30);
+
+                } else if (current >= 400) {
+                    this._interval$.next(current - 20);
+
+                } else {
+                    this._interval$.next(current - 10);
+                }
+            })
     }
 }

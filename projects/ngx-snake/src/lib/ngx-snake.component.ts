@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnInit, Output} from '@angular/core';
 import {GameManagerService} from './services/game-manager.service';
 
 @Component({
@@ -12,6 +12,9 @@ import {GameManagerService} from './services/game-manager.service';
 export class NgxSnakeComponent implements OnInit {
     @Input() boardHeight: number = 10;
     @Input() boardWidth: number = 10;
+
+    @Output() foodEaten = this._manager.foodEaten$;
+    @Output() gameOver = this._manager.gameOver$;
 
     public grid$ = this._manager.grid$;
 

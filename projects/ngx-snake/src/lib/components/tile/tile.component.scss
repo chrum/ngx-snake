@@ -42,6 +42,7 @@ ngx-snake-tile {
         }
     }
     &.food {
+        padding: 3px;
         div {
             background: #00E436;
         }

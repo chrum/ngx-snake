@@ -27,7 +27,6 @@ export class TileComponent implements OnInit {
 
     ngOnInit() {
         if (this.state) {
-            console.log(this.state);
             this._renderer.addClass(this.el.nativeElement, this.state);
         }
 
