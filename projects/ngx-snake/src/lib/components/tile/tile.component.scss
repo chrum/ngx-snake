@@ -6,6 +6,7 @@ ngx-snake-tile {
     height: 25px;
     float: left;
     margin: 1px;
+    box-sizing: border-box;
 
     div {
         height: 100%;

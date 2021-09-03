@@ -1,4 +1,4 @@
-import {NgModule} from '@angular/core';
+import {ModuleWithProviders, NgModule} from '@angular/core';
 import {NgxSnakeComponent} from './ngx-snake.component';
 
 
@@ -24,4 +24,9 @@ import {CommonModule} from '@angular/common';
     ]
 })
 export class NgxSnakeModule {
+    static forRoot(): ModuleWithProviders<NgxSnakeModule> {
+        return {
+            ngModule: NgxSnakeModule
+        };
+    }
 }

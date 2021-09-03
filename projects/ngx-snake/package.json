@@ -1,11 +1,31 @@
 {
-  "name": "ngx-snake",
-  "version": "0.0.1",
-  "peerDependencies": {
-    "@angular/common": "^12.1.0",
-    "@angular/core": "^12.1.0"
-  },
-  "dependencies": {
-    "tslib": "^2.2.0"
-  }
+    "name": "ngx-snake",
+    "description": "Snake game as an angular component, its only the core of the game... you need to add everything around it (controls, score...)  yourself :) ",
+    "version": "1.0.3",
+    "author": {
+        "name": "Chrystian Ruminowicz",
+        "email": "chrystianr@gmail.com"
+    },
+    "homepage": "http://chrum.it/pages/ngx-snake",
+    "keywords": [
+        "angular",
+        "ngx",
+        "ng",
+        "typescript",
+        "snake",
+        "game",
+        "core"
+    ],
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/chrum/ngx-snake"
+    },
+    "peerDependencies": {
+        "@angular/common": "^12.1.0",
+        "@angular/core": "^12.1.0"
+    },
+    "dependencies": {
+        "tslib": "^2.2.0"
+    }
 }

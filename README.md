@@ -9,12 +9,10 @@ Check the demo [here](http://chrum.it/pages/ngx-snake)
 
 ## Using it:
 #### Install:
-NOT YET :( the library is not yet published to npm
-<!--
+
 ```bash
 npm install ngx-snake
 ```
--->
 
 #### Import
 ```javascript

@@ -1,6 +1,7 @@
 import {Component, ViewChild} from '@angular/core';
 import {Hotkey, HotkeysService} from 'angular2-hotkeys';
 import {NgxSnakeComponent} from '../../../ngx-snake/src/lib/ngx-snake.component';
+// import {NgxSnakeComponent} from 'ngx-snake';
 
 @Component({
     selector: 'app-root',
@@ -11,7 +12,7 @@ export class AppComponent {
     public bw = false;
 
     @ViewChild('game')
-    private _tetris: NgxSnakeComponent;
+    private _snake: NgxSnakeComponent;
 
 
     constructor(private _hotkeysService: HotkeysService) {
@@ -28,22 +29,22 @@ export class AppComponent {
 
     private _addHotkeys() {
         this._hotkeysService.add(new Hotkey('up', (event: KeyboardEvent): boolean => {
-            this._tetris.actionUp();
+            this._snake.actionUp();
             return false; // Prevent bubbling
         }));
 
         this._hotkeysService.add(new Hotkey('left', (event: KeyboardEvent): boolean => {
-            this._tetris.actionLeft();
+            this._snake.actionLeft();
             return false; // Prevent bubbling
         }));
 
         this._hotkeysService.add(new Hotkey('down', (event: KeyboardEvent): boolean => {
-            this._tetris.actionDown();
+            this._snake.actionDown();
             return false; // Prevent bubbling
         }));
 
         this._hotkeysService.add(new Hotkey('right', (event: KeyboardEvent): boolean => {
-            this._tetris.actionRight();
+            this._snake.actionRight();
             return false; // Prevent bubbling
         }));
     }
