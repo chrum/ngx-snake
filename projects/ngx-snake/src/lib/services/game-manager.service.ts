@@ -7,6 +7,8 @@ interface Part {
     x: number, y: number
 }
 
+const INITIAL_SPEED = 700;
+
 @Injectable()
 export class GameManagerService {
     private _grid: GameGrid = [];
@@ -31,7 +33,7 @@ export class GameManagerService {
 
     private _food: Part | null = null;
 
-    private _interval$ = new BehaviorSubject(700);
+    private _interval$ = new BehaviorSubject(INITIAL_SPEED);
     private _paused = true;
     private _playable = true;
     public signal$ = this._interval$
@@ -52,8 +54,7 @@ export class GameManagerService {
 
         this._gridChanged();
 
-        this.signal$.subscribe(() => {
-        })
+        this.signal$.subscribe();
     }
 
     public start() {
@@ -75,6 +76,7 @@ export class GameManagerService {
         this._playable = true;
         this._moveDir = MoveDirections.RIGHT;
         this._nextMoveDir = this._moveDir;
+        this._interval$.next(INITIAL_SPEED);
 
         this._buildEmptyGrid();
         this._initSnake();

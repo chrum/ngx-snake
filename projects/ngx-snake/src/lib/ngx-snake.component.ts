@@ -7,7 +7,8 @@ import {GameManagerService} from './services/game-manager.service';
         <ngx-snake-board
             [data]="grid$ | async"></ngx-snake-board>
     `,
-    styles: []
+    styles: [],
+    providers: [GameManagerService]
 })
 export class NgxSnakeComponent implements OnInit {
     @Input() boardHeight: number = 10;

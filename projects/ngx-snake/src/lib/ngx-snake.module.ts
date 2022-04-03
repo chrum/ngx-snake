@@ -4,7 +4,6 @@ import {NgxSnakeComponent} from './ngx-snake.component';
 
 import {BoardComponent} from './components/board/board.component';
 import {TileComponent} from './components/tile/tile.component';
-import {GameManagerService} from './services/game-manager.service';
 import {CommonModule} from '@angular/common';
 
 @NgModule({
@@ -15,9 +14,6 @@ import {CommonModule} from '@angular/common';
     ],
     imports: [
         CommonModule
-    ],
-    providers: [
-        GameManagerService
     ],
     exports: [
         NgxSnakeComponent
